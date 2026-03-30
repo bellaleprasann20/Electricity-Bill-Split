@@ -1,0 +1,62 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #1e293b;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.navbarBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bolt {
+  font-size: 1.5rem;
+  color: #facc15; /* Electric Yellow */
+}
+
+.brandText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.tabGroup {
+  display: flex;
+  background-color: #334155;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+}
+
+.tabBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.tabBtn:hover {
+  color: white;
+}
+
+.active {
+  background-color: #facc15;
+  color: #1e293b !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
