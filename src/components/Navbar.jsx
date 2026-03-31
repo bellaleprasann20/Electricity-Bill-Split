@@ -1,8 +1,9 @@
 import { useBill } from '../context/BillContext';
-import styles from './Navbar.module.css';
+import { useTheme } from '../hooks/useTheme';
 
 const Navbar = () => {
   const { activeTab, setActiveTab } = useBill();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className="navbar">
@@ -10,6 +11,7 @@ const Navbar = () => {
         <span className="bolt">⚡</span>
         <span className="brand-text">BillSplit</span>
       </div>
+
       <div className="tab-group">
         <button
           className={`tab-btn ${activeTab === 'split' ? 'active' : ''}`}
@@ -23,7 +25,18 @@ const Navbar = () => {
         >
           Appliances
         </button>
+        <button
+          className={`tab-btn ${activeTab === 'history' ? 'active' : ''}`}
+          onClick={() => setActiveTab('history')}
+        >
+          📈 History
+        </button>
       </div>
+
+      <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
+        {theme === 'dark' ? '☀️' : '🌙'}
+        <span className="theme-label">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+      </button>
     </nav>
   );
 };
