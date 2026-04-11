@@ -1,42 +1,42 @@
 import { useBill } from '../context/BillContext';
-import { calcRatePerUnit } from '../utils/calculations';
-import { formatRate } from '../utils/formatters';
 
 const BillInput = () => {
-  const { totalBill, setTotalBill, totalUnits, setTotalUnits, splitMode, setSplitMode } = useBill();
-  const rate = calcRatePerUnit(totalBill, totalUnits);
+  const { totalBill, setTotalBill, splitMode, setSplitMode } = useBill();
 
   return (
     <div className="bill-input-section">
-      <div className="bill-cards-row">
-        <div className="bill-card">
-          <label className="bill-label">Total Bill Amount</label>
-          <div className="bill-input-wrap">
-            <span className="currency-symbol">₹</span>
-            <input
-              type="number"
-              className="bill-number-input"
-              value={totalBill}
-              min="0"
-              onChange={e => setTotalBill(parseFloat(e.target.value) || 0)}
-            />
-          </div>
-          <div className="bill-sub">this month's total</div>
-        </div>
 
-        <div className="bill-card">
-          <label className="bill-label">Units Consumed</label>
-          <div className="bill-input-wrap">
-            <input
-              type="number"
-              className="bill-number-input"
-              value={totalUnits}
-              min="1"
-              onChange={e => setTotalUnits(parseFloat(e.target.value) || 1)}
-            />
-            <span className="currency-symbol">kWh</span>
+      <div className="bill-card" style={{ marginBottom: '1rem' }}>
+        <label className="bill-label">Total Electricity Bill</label>
+        <div className="bill-input-wrap">
+          <span className="currency-symbol">₹</span>
+          <input
+            type="number"
+            className="bill-number-input"
+            value={totalBill}
+            min="0"
+            onChange={e => setTotalBill(parseFloat(e.target.value) || 0)}
+            placeholder="0"
+          />
+        </div>
+        <div className="bill-sub">enter the total amount from your electricity bill</div>
+      </div>
+
+      <div className="bill-hint-card">
+        <div className="hint-title">📄 Where to find the amount?</div>
+        <div className="hint-steps">
+          <div className="hint-step">
+            <span className="hint-num">1</span>
+            <span>Open your electricity bill paper or app</span>
           </div>
-          <div className="bill-sub">rate: {formatRate(rate)}/unit</div>
+          <div className="hint-step">
+            <span className="hint-num">2</span>
+            <span>Look for <strong>"Net Amount Payable"</strong> or <strong>"Total Due"</strong></span>
+          </div>
+          <div className="hint-step">
+            <span className="hint-num">3</span>
+            <span>Enter that number above ☝️</span>
+          </div>
         </div>
       </div>
 
@@ -44,9 +44,9 @@ const BillInput = () => {
         <span className="split-label">Split by</span>
         <div className="split-toggle">
           {[
-            { value: 'equal', label: 'Equal share' },
-            { value: 'days', label: 'Days stayed' },
-            { value: 'units', label: 'Units used' },
+            { value: 'equal', label: '⚖️ Equal' },
+            { value: 'days', label: '📅 Days stayed' },
+            { value: 'rooms', label: '🚪 Room size' },
           ].map(opt => (
             <button
               key={opt.value}
@@ -58,6 +58,23 @@ const BillInput = () => {
           ))}
         </div>
       </div>
+
+      {splitMode === 'days' && (
+        <div className="mode-explain">
+          📅 People who stayed fewer days pay less. Enter each person's days below.
+        </div>
+      )}
+      {splitMode === 'rooms' && (
+        <div className="mode-explain">
+          🚪 People with bigger rooms pay more. Enter room size (1=small, 2=medium, 3=large) below.
+        </div>
+      )}
+      {splitMode === 'equal' && (
+        <div className="mode-explain">
+          ⚖️ Everyone pays the exact same amount. Simplest and most common method.
+        </div>
+      )}
+
     </div>
   );
 };

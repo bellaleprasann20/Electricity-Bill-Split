@@ -28,17 +28,14 @@ const ResultsPanel = () => {
                 <div className="result-info">
                   <div className="result-name">{person.name}</div>
                   <div className="result-meta">
-                    {person.days} days
-                    {splitMode === 'units' && ` · ${person.units} kWh`}
+                    {splitMode === 'days' && `${person.days} days · `}
+                    {splitMode === 'rooms' && `${person.rooms === 1 ? 'Small' : person.rooms === 2 ? 'Medium' : 'Large'} room · `}
                     <span className="pct-badge" style={{ background: color.bg, color: color.text }}>
                       {pct}%
                     </span>
                   </div>
                   <div className="result-bar-wrap">
-                    <div
-                      className="result-bar"
-                      style={{ width: `${barWidth}%`, background: color.dot }}
-                    />
+                    <div className="result-bar" style={{ width: `${barWidth}%`, background: color.dot }} />
                   </div>
                 </div>
               </div>

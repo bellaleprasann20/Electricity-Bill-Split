@@ -4,9 +4,9 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 const BillContext = createContext(null);
 
 const DEFAULT_PEOPLE = [
-  { id: 1, name: 'Rahul', days: 30, units: 60 },
-  { id: 2, name: 'Priya', days: 30, units: 80 },
-  { id: 3, name: 'Arjun', days: 25, units: 40 },
+  { id: 1, name: 'Rahul', days: 30, rooms: 1 },
+  { id: 2, name: 'Priya', days: 30, rooms: 2 },
+  { id: 3, name: 'Arjun', days: 25, rooms: 1 },
 ];
 
 const DEFAULT_APPLIANCES = [
@@ -19,7 +19,6 @@ const DEFAULT_APPLIANCES = [
 
 export const BillProvider = ({ children }) => {
   const [totalBill, setTotalBill] = useLocalStorage('ebs_bill', 1200);
-  const [totalUnits, setTotalUnits] = useLocalStorage('ebs_units', 180);
   const [splitMode, setSplitMode] = useLocalStorage('ebs_mode', 'equal');
   const [people, setPeople] = useLocalStorage('ebs_people', DEFAULT_PEOPLE);
   const [appliances, setAppliances] = useLocalStorage('ebs_appliances', DEFAULT_APPLIANCES);
@@ -27,7 +26,12 @@ export const BillProvider = ({ children }) => {
 
   const addPerson = () => {
     const newId = Date.now();
-    setPeople(prev => [...prev, { id: newId, name: `Roommate ${prev.length + 1}`, days: 30, units: 0 }]);
+    setPeople(prev => [...prev, {
+      id: newId,
+      name: `Roommate ${prev.length + 1}`,
+      days: 30,
+      rooms: 1,
+    }]);
   };
 
   const updatePerson = (id, field, value) => {
@@ -54,7 +58,6 @@ export const BillProvider = ({ children }) => {
   return (
     <BillContext.Provider value={{
       totalBill, setTotalBill,
-      totalUnits, setTotalUnits,
       splitMode, setSplitMode,
       people, addPerson, updatePerson, removePerson,
       appliances, addAppliance, updateAppliance, removeAppliance,

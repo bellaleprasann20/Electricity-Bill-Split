@@ -5,10 +5,11 @@ import RoommateList from './components/RoommateList';
 import SummaryCards from './components/SummaryCards';
 import ResultsPanel from './components/ResultsPanel';
 import ApplianceTracker from './components/ApplianceTracker';
-import LiveCostMeter from './components/LiveCostMeter';
 import WhatsAppShare from './components/WhatsAppShare';
 import BudgetAlert from './components/BudgetAlert';
 import BillHistory from './components/BillHistory';
+import WaterBill from './components/WaterBill';
+import WifiBill from './components/WifiBill';
 import './App.css';
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
     <div className="app">
       <Navbar />
       <main className="main-content">
+
         {activeTab === 'split' && (
           <div className="split-layout">
             <div className="split-left">
@@ -26,15 +28,18 @@ const App = () => {
               <RoommateList />
             </div>
             <div className="split-right">
-              <LiveCostMeter />
               <SummaryCards />
               <ResultsPanel />
               <WhatsAppShare />
             </div>
           </div>
         )}
+
+        {activeTab === 'water' && <WaterBill />}
+        {activeTab === 'wifi' && <WifiBill />}
         {activeTab === 'appliances' && <ApplianceTracker />}
         {activeTab === 'history' && <BillHistory />}
+
       </main>
     </div>
   );

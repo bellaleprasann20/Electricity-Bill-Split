@@ -5,6 +5,14 @@ const Navbar = () => {
   const { activeTab, setActiveTab } = useBill();
   const { theme, toggleTheme } = useTheme();
 
+  const tabs = [
+    { id: 'split', label: '⚡ Electricity' },
+    { id: 'water', label: '💧 Water' },
+    { id: 'wifi', label: '📶 WiFi' },
+    { id: 'appliances', label: '🏠 Appliances' },
+    { id: 'history', label: '📈 History' },
+  ];
+
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -13,24 +21,15 @@ const Navbar = () => {
       </div>
 
       <div className="tab-group">
-        <button
-          className={`tab-btn ${activeTab === 'split' ? 'active' : ''}`}
-          onClick={() => setActiveTab('split')}
-        >
-          Split Bill
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'appliances' ? 'active' : ''}`}
-          onClick={() => setActiveTab('appliances')}
-        >
-          Appliances
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'history' ? 'active' : ''}`}
-          onClick={() => setActiveTab('history')}
-        >
-          📈 History
-        </button>
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
