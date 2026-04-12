@@ -1,11 +1,10 @@
 import { useBill } from '../context/BillContext';
 import { calcMonthlyKwh } from '../utils/calculations';
 import { formatCurrency, formatUnits } from '../utils/formatters';
-import { calcRatePerUnit } from '../utils/calculations';
 
-const ApplianceRow = ({ appliance, index, color }) => {
-  const { updateAppliance, removeAppliance, appliances, totalBill, totalUnits } = useBill();
-  const rate = calcRatePerUnit(totalBill, totalUnits);
+const ApplianceRow = ({ appliance, color }) => {
+  const { updateAppliance, removeAppliance, appliances, totalBill } = useBill();
+  const rate = totalBill / 180;
   const kwh = calcMonthlyKwh(appliance.watts, appliance.hours);
   const cost = kwh * rate;
 

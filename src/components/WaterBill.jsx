@@ -10,10 +10,10 @@ const USAGE_LABELS = {
 };
 
 const SPLIT_MODES = [
-  { value: 'equal',   label: '⚖️ Equal' },
-  { value: 'days',    label: '📅 Days Stayed' },
-  { value: 'usage',   label: '💧 Usage Level' },
-  { value: 'smart',   label: '🧠 Smart Split' },
+  { value: 'equal',  label: '⚖️ Equal' },
+  { value: 'days',   label: '📅 Days Stayed' },
+  { value: 'usage',  label: '💧 Usage Level' },
+  { value: 'smart',  label: '🧠 Smart Split' },
 ];
 
 const MODE_EXPLAIN = {
@@ -23,14 +23,27 @@ const MODE_EXPLAIN = {
   smart:  'Most fair! Combines days stayed × usage level together for the best result.',
 };
 
+// ✅ Safety function — fixes any old/broken person data
+const safePerson = (p, index) => ({
+  id: p.id || Date.now() + index,
+  name: p.name || `Person ${index + 1}`,
+  days: p.days || 30,
+  usage: USAGE_LABELS[p.usage] ? p.usage : 'medium', // ← fixes undefined usage
+});
+
+const DEFAULT_PEOPLE = [
+  { id: 1, name: 'Rahul', days: 30, usage: 'medium' },
+  { id: 2, name: 'Priya', days: 30, usage: 'medium' },
+  { id: 3, name: 'Arjun', days: 30, usage: 'medium' },
+];
+
 const WaterBill = () => {
   const [totalBill, setTotalBill] = useLocalStorage('water_bill', 300);
   const [splitMode, setSplitMode] = useLocalStorage('water_mode', 'equal');
-  const [people, setPeople] = useLocalStorage('water_people', [
-    { id: 1, name: 'Rahul', days: 30, usage: 'medium' },
-    { id: 2, name: 'Priya', days: 30, usage: 'medium' },
-    { id: 3, name: 'Arjun', days: 30, usage: 'medium' },
-  ]);
+  const [rawPeople, setPeople] = useLocalStorage('water_people', DEFAULT_PEOPLE);
+
+  // ✅ Always sanitize people from localStorage before using
+  const people = rawPeople.map(safePerson);
 
   const addPerson = () => {
     setPeople(prev => [
@@ -60,7 +73,6 @@ const WaterBill = () => {
       return people.map(p => USAGE_WEIGHT[p.usage] / total);
     }
     if (splitMode === 'smart') {
-      // Score = days stayed × usage weight
       const scores = people.map(p => (p.days || 30) * USAGE_WEIGHT[p.usage]);
       const total = scores.reduce((s, sc) => s + sc, 0) || 1;
       return scores.map(sc => sc / total);
@@ -103,7 +115,7 @@ const WaterBill = () => {
         <div className="bill-sub">enter total amount from your water bill</div>
       </div>
 
-      {/* Split mode selector */}
+      {/* Split mode */}
       <div className="bill-card" style={{ marginBottom: '1.5rem' }}>
         <label className="bill-label">Split Mode</label>
         <div className="split-toggle" style={{ marginTop: '10px', flexWrap: 'wrap' }}>
@@ -121,7 +133,6 @@ const WaterBill = () => {
           {MODE_EXPLAIN[splitMode]}
         </div>
 
-        {/* Smart split formula explanation */}
         {splitMode === 'smart' && (
           <div className="smart-formula">
             <div className="smart-formula-title">📐 Formula used</div>
@@ -131,18 +142,13 @@ const WaterBill = () => {
               <br />
               Share = (Your score ÷ Total score) × Total Bill
             </div>
-            <div className="smart-example">
-              <strong>Example:</strong> Rahul (30d × High3 = 90) &nbsp;
-              Priya (30d × Med2 = 60) &nbsp;
-              Arjun (23d × Low1 = 23) &nbsp;→ Total = 173
-            </div>
           </div>
         )}
       </div>
 
       <div className="two-col-layout">
 
-        {/* People list */}
+        {/* People */}
         <div>
           <div className="section-header">
             <h3 className="section-title">Members</h3>
@@ -176,8 +182,6 @@ const WaterBill = () => {
                   </div>
 
                   <div className="roommate-fields">
-
-                    {/* Days stayed */}
                     <div className={`field-group ${!showDays ? 'dimmed' : ''}`}>
                       <label className="field-label">📅 Days stayed</label>
                       <input
@@ -196,11 +200,9 @@ const WaterBill = () => {
                       )}
                     </div>
 
-                    {/* Usage level */}
                     <div className={`field-group ${!showUsage ? 'dimmed' : ''}`}>
                       <label className="field-label">💧 Usage level</label>
                       <select
-                        className="field-input"
                         value={person.usage}
                         disabled={!showUsage}
                         onChange={e => updatePerson(person.id, 'usage', e.target.value)}
@@ -213,6 +215,7 @@ const WaterBill = () => {
                           fontSize: '14px',
                           width: '100%',
                           cursor: !showUsage ? 'not-allowed' : 'pointer',
+                          opacity: !showUsage ? 0.4 : 1,
                         }}
                       >
                         {Object.entries(USAGE_LABELS).map(([key, val]) => (
@@ -221,20 +224,17 @@ const WaterBill = () => {
                       </select>
                       {showUsage && (
                         <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                          {USAGE_LABELS[person.usage].desc}
+                          {USAGE_LABELS[person.usage]?.desc}
                         </div>
                       )}
                     </div>
-
                   </div>
 
-                  {/* Smart score preview */}
                   {splitMode === 'smart' && (
                     <div className="smart-score-badge">
                       Score: {person.days} × {USAGE_WEIGHT[person.usage]} = <strong>{person.days * USAGE_WEIGHT[person.usage]}</strong>
                     </div>
                   )}
-
                 </div>
               );
             })}
@@ -261,7 +261,7 @@ const WaterBill = () => {
                         <div className="result-name">{person.name}</div>
                         <div className="result-meta">
                           {showDays && `${person.days}d · `}
-                          {showUsage && `${USAGE_LABELS[person.usage].label} · `}
+                          {showUsage && `${USAGE_LABELS[person.usage]?.label} · `}
                           <span className="pct-badge" style={{ background: color.bg, color: color.text }}>
                             {pct}%
                           </span>
@@ -288,7 +288,6 @@ const WaterBill = () => {
             <div className="tip-item">🧺 Run washing machine only when full</div>
           </div>
         </div>
-
       </div>
     </div>
   );

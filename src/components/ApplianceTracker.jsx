@@ -1,14 +1,16 @@
 import { useBill } from '../context/BillContext';
-import { calcMonthlyKwh, calcRatePerUnit, calcApplianceStats } from '../utils/calculations';
+import { calcMonthlyKwh, calcApplianceStats } from '../utils/calculations';
 import { formatCurrency, formatUnits } from '../utils/formatters';
 import { APPLIANCE_COLORS } from '../utils/colors';
 import ApplianceRow from './ApplianceRow';
 import UsageBar from './UsageBar';
 
 const ApplianceTracker = () => {
-  const { appliances, addAppliance, totalBill, totalUnits } = useBill();
-  const rate = calcRatePerUnit(totalBill, totalUnits);
-  const { totalKwh, totalCost, topAppliance } = calcApplianceStats(appliances, rate);
+  const { appliances, addAppliance, totalBill } = useBill();
+  const rate = totalBill / 180;
+  const { topAppliance } = calcApplianceStats(appliances);
+  const totalKwh = appliances.reduce((s, a) => s + calcMonthlyKwh(a.watts, a.hours), 0);
+  const totalCost = totalKwh * rate;
 
   return (
     <div className="appliance-section">
