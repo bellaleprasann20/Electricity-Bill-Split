@@ -4,7 +4,6 @@ import BillInput from './components/BillInput';
 import RoommateList from './components/RoommateList';
 import SummaryCards from './components/SummaryCards';
 import ResultsPanel from './components/ResultsPanel';
-import ApplianceTracker from './components/ApplianceTracker';
 import WhatsAppShare from './components/WhatsAppShare';
 import BudgetAlert from './components/BudgetAlert';
 import BillHistory from './components/BillHistory';
@@ -37,7 +36,6 @@ const App = () => {
 
         {activeTab === 'water' && <WaterBill />}
         {activeTab === 'wifi' && <WifiBill />}
-        {activeTab === 'appliances' && <ApplianceTracker />}
         {activeTab === 'history' && <BillHistory />}
 
       </main>

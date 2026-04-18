@@ -1119,3 +1119,133 @@ button {
 .smart-score-badge strong {
   color: #3b82f6;
 }
+/* ── Bill History Page ───────────────────────────────── */
+.history-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.history-page-header {
+  margin-bottom: 1.5rem;
+}
+
+.history-page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.history-page-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.history-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Each Bill Section Card ──────────────────────────── */
+.bill-section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.bill-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.bill-section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bill-section-icon {
+  font-size: 20px;
+}
+
+.bill-section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* ── History Row extras ──────────────────────────────── */
+.history-row-current {
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  padding-left: 10px;
+}
+
+.current-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 99px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.history-no-data {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+  font-style: italic;
+}
+
+.history-current-bill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 1rem;
+}
+
+.history-current-label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.history-current-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.history-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  align-items: center;
+}
+
+.legend-dot-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-diff {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 70px;
+  text-align: right;
+}
