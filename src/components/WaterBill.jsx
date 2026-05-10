@@ -2,39 +2,26 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { getPersonColor } from '../utils/colors';
 import { getInitials, formatCurrency } from '../utils/formatters';
 
-const USAGE_WEIGHT = { low: 1, medium: 2, high: 3 };
-const USAGE_LABELS = {
-  low:    { label: '🟢 Low',    desc: 'Quick showers, minimal use' },
-  medium: { label: '🟡 Medium', desc: 'Normal daily usage' },
-  high:   { label: '🔴 High',   desc: 'Long showers, daily laundry' },
-};
-
 const SPLIT_MODES = [
-  { value: 'equal',  label: '⚖️ Equal' },
-  { value: 'days',   label: '📅 Days Stayed' },
-  { value: 'usage',  label: '💧 Usage Level' },
-  { value: 'smart',  label: '🧠 Smart Split' },
+  { value: 'equal', label: '⚖️ Equal' },
+  { value: 'days',  label: '📅 Days Stayed' },
 ];
 
 const MODE_EXPLAIN = {
-  equal:  'Everyone pays the same amount regardless of usage.',
-  days:   'Person away for 7 days pays less. Enter actual days stayed this month.',
-  usage:  'Heavy water users pay more. Pick Low / Medium / High for each person.',
-  smart:  'Most fair! Combines days stayed × usage level together for the best result.',
+  equal: 'Everyone pays the same amount regardless of usage.',
+  days:  'Person away for 7 days pays less. Enter actual days stayed this month.',
 };
 
-// ✅ Safety function — fixes any old/broken person data
 const safePerson = (p, index) => ({
-  id: p.id || Date.now() + index,
+  id:   p.id   || Date.now() + index,
   name: p.name || `Person ${index + 1}`,
   days: p.days || 30,
-  usage: USAGE_LABELS[p.usage] ? p.usage : 'medium', // ← fixes undefined usage
 });
 
 const DEFAULT_PEOPLE = [
-  { id: 1, name: 'Rahul', days: 30, usage: 'medium' },
-  { id: 2, name: 'Priya', days: 30, usage: 'medium' },
-  { id: 3, name: 'Arjun', days: 30, usage: 'medium' },
+  { id: 1, name: 'Rahul', days: 30 },
+  { id: 2, name: 'Priya', days: 30 },
+  { id: 3, name: 'Arjun', days: 30 },
 ];
 
 const WaterBill = () => {
@@ -42,13 +29,12 @@ const WaterBill = () => {
   const [splitMode, setSplitMode] = useLocalStorage('water_mode', 'equal');
   const [rawPeople, setPeople] = useLocalStorage('water_people', DEFAULT_PEOPLE);
 
-  // ✅ Always sanitize people from localStorage before using
   const people = rawPeople.map(safePerson);
 
   const addPerson = () => {
     setPeople(prev => [
       ...prev,
-      { id: Date.now(), name: `Person ${prev.length + 1}`, days: 30, usage: 'medium' },
+      { id: Date.now(), name: `Person ${prev.length + 1}`, days: 30 },
     ]);
   };
 
@@ -61,21 +47,9 @@ const WaterBill = () => {
   };
 
   const calcShares = () => {
-    if (splitMode === 'equal') {
-      return people.map(() => 1 / people.length);
-    }
     if (splitMode === 'days') {
       const total = people.reduce((s, p) => s + (p.days || 30), 0) || 1;
       return people.map(p => (p.days || 30) / total);
-    }
-    if (splitMode === 'usage') {
-      const total = people.reduce((s, p) => s + USAGE_WEIGHT[p.usage], 0) || 1;
-      return people.map(p => USAGE_WEIGHT[p.usage] / total);
-    }
-    if (splitMode === 'smart') {
-      const scores = people.map(p => (p.days || 30) * USAGE_WEIGHT[p.usage]);
-      const total = scores.reduce((s, sc) => s + sc, 0) || 1;
-      return scores.map(sc => sc / total);
     }
     return people.map(() => 1 / people.length);
   };
@@ -84,13 +58,9 @@ const WaterBill = () => {
   const amounts = shares.map(s => s * totalBill);
   const maxAmount = Math.max(...amounts);
 
-  const showDays  = splitMode === 'days'  || splitMode === 'smart';
-  const showUsage = splitMode === 'usage' || splitMode === 'smart';
-
   return (
     <div className="bill-tab-section">
 
-      {/* Header */}
       <div className="bill-tab-header water-header">
         <span className="bill-tab-icon">💧</span>
         <div>
@@ -99,7 +69,6 @@ const WaterBill = () => {
         </div>
       </div>
 
-      {/* Bill amount */}
       <div className="bill-card" style={{ marginBottom: '1rem' }}>
         <label className="bill-label">Total Water Bill</label>
         <div className="bill-input-wrap">
@@ -115,10 +84,9 @@ const WaterBill = () => {
         <div className="bill-sub">enter total amount from your water bill</div>
       </div>
 
-      {/* Split mode */}
       <div className="bill-card" style={{ marginBottom: '1.5rem' }}>
         <label className="bill-label">Split Mode</label>
-        <div className="split-toggle" style={{ marginTop: '10px', flexWrap: 'wrap' }}>
+        <div className="split-toggle" style={{ marginTop: '10px' }}>
           {SPLIT_MODES.map(opt => (
             <button
               key={opt.value}
@@ -132,23 +100,10 @@ const WaterBill = () => {
         <div className="mode-explain" style={{ marginTop: '10px' }}>
           {MODE_EXPLAIN[splitMode]}
         </div>
-
-        {splitMode === 'smart' && (
-          <div className="smart-formula">
-            <div className="smart-formula-title">📐 Formula used</div>
-            <div className="smart-formula-body">
-              Score = Days stayed × Usage weight &nbsp;|&nbsp;
-              Low=1 · Medium=2 · High=3
-              <br />
-              Share = (Your score ÷ Total score) × Total Bill
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="two-col-layout">
 
-        {/* People */}
         <div>
           <div className="section-header">
             <h3 className="section-title">Members</h3>
@@ -181,67 +136,29 @@ const WaterBill = () => {
                     )}
                   </div>
 
-                  <div className="roommate-fields">
-                    <div className={`field-group ${!showDays ? 'dimmed' : ''}`}>
-                      <label className="field-label">📅 Days stayed</label>
-                      <input
-                        type="number"
-                        className="field-input"
-                        value={person.days}
-                        min="1"
-                        max="31"
-                        disabled={!showDays}
-                        onChange={e => updatePerson(person.id, 'days', parseInt(e.target.value) || 1)}
-                      />
-                      {showDays && person.days < 30 && (
-                        <div style={{ fontSize: '10px', color: '#22c55e', marginTop: '2px' }}>
-                          Away for {30 - person.days} days 👍
-                        </div>
-                      )}
-                    </div>
-
-                    <div className={`field-group ${!showUsage ? 'dimmed' : ''}`}>
-                      <label className="field-label">💧 Usage level</label>
-                      <select
-                        value={person.usage}
-                        disabled={!showUsage}
-                        onChange={e => updatePerson(person.id, 'usage', e.target.value)}
-                        style={{
-                          background: 'var(--bg-input)',
-                          color: 'var(--text-primary)',
-                          border: '1px solid var(--border)',
-                          borderRadius: 'var(--radius-sm)',
-                          padding: '7px 10px',
-                          fontSize: '14px',
-                          width: '100%',
-                          cursor: !showUsage ? 'not-allowed' : 'pointer',
-                          opacity: !showUsage ? 0.4 : 1,
-                        }}
-                      >
-                        {Object.entries(USAGE_LABELS).map(([key, val]) => (
-                          <option key={key} value={key}>{val.label}</option>
-                        ))}
-                      </select>
-                      {showUsage && (
-                        <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                          {USAGE_LABELS[person.usage]?.desc}
-                        </div>
-                      )}
-                    </div>
+                  <div className={`field-group ${splitMode !== 'days' ? 'dimmed' : ''}`}>
+                    <label className="field-label">📅 Days stayed</label>
+                    <input
+                      type="number"
+                      className="field-input"
+                      value={person.days}
+                      min="1"
+                      max="31"
+                      disabled={splitMode !== 'days'}
+                      onChange={e => updatePerson(person.id, 'days', parseInt(e.target.value) || 1)}
+                    />
+                    {splitMode === 'days' && person.days < 30 && (
+                      <div style={{ fontSize: '10px', color: '#22c55e', marginTop: '4px' }}>
+                        Away for {30 - person.days} days 👍
+                      </div>
+                    )}
                   </div>
-
-                  {splitMode === 'smart' && (
-                    <div className="smart-score-badge">
-                      Score: {person.days} × {USAGE_WEIGHT[person.usage]} = <strong>{person.days * USAGE_WEIGHT[person.usage]}</strong>
-                    </div>
-                  )}
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Results */}
         <div>
           <h3 className="section-title">Each person pays</h3>
           <div className="results-section" style={{ marginBottom: '1rem' }}>
@@ -260,8 +177,7 @@ const WaterBill = () => {
                       <div className="result-info">
                         <div className="result-name">{person.name}</div>
                         <div className="result-meta">
-                          {showDays && `${person.days}d · `}
-                          {showUsage && `${USAGE_LABELS[person.usage]?.label} · `}
+                          {splitMode === 'days' && `${person.days} days · `}
                           <span className="pct-badge" style={{ background: color.bg, color: color.text }}>
                             {pct}%
                           </span>
@@ -288,6 +204,7 @@ const WaterBill = () => {
             <div className="tip-item">🧺 Run washing machine only when full</div>
           </div>
         </div>
+
       </div>
     </div>
   );

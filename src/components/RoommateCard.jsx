@@ -36,31 +36,11 @@ const RoommateCard = ({ person, index }) => {
             disabled={splitMode !== 'days'}
             onChange={e => updatePerson(person.id, 'days', parseInt(e.target.value) || 1)}
           />
-        </div>
-
-        <div className={`field-group ${splitMode !== 'rooms' ? 'dimmed' : ''}`}>
-          <label className="field-label">🚪 Room size</label>
-          <select
-            className="field-input"
-            value={person.rooms}
-            disabled={splitMode !== 'rooms'}
-            onChange={e => updatePerson(person.id, 'rooms', parseInt(e.target.value))}
-            style={{
-              background: 'var(--bg-input)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '7px 10px',
-              fontSize: '14px',
-              width: '100%',
-              cursor: splitMode !== 'rooms' ? 'not-allowed' : 'pointer',
-              opacity: splitMode !== 'rooms' ? 0.4 : 1,
-            }}
-          >
-            <option value={1}>Small (1x)</option>
-            <option value={2}>Medium (2x)</option>
-            <option value={3}>Large (3x)</option>
-          </select>
+          {splitMode === 'days' && person.days < 30 && (
+            <div style={{ fontSize: '10px', color: '#22c55e', marginTop: '4px' }}>
+              Away for {30 - person.days} days 👍
+            </div>
+          )}
         </div>
       </div>
     </div>

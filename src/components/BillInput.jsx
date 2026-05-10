@@ -46,7 +46,7 @@ const BillInput = () => {
           {[
             { value: 'equal', label: '⚖️ Equal' },
             { value: 'days', label: '📅 Days stayed' },
-            { value: 'rooms', label: '🚪 Room size' },
+           
           ].map(opt => (
             <button
               key={opt.value}

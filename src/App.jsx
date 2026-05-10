@@ -4,9 +4,9 @@ import BillInput from './components/BillInput';
 import RoommateList from './components/RoommateList';
 import SummaryCards from './components/SummaryCards';
 import ResultsPanel from './components/ResultsPanel';
-import WhatsAppShare from './components/WhatsAppShare';
+
 import BudgetAlert from './components/BudgetAlert';
-import BillHistory from './components/BillHistory';
+
 import WaterBill from './components/WaterBill';
 import WifiBill from './components/WifiBill';
 import './App.css';
@@ -29,14 +29,14 @@ const App = () => {
             <div className="split-right">
               <SummaryCards />
               <ResultsPanel />
-              <WhatsAppShare />
+          
             </div>
           </div>
         )}
 
         {activeTab === 'water' && <WaterBill />}
         {activeTab === 'wifi' && <WifiBill />}
-        {activeTab === 'history' && <BillHistory />}
+       
 
       </main>
     </div>

@@ -7,7 +7,7 @@ const Navbar = () => {
     { id: 'split',   label: '⚡ Electricity' },
     { id: 'water',   label: '💧 Water' },
     { id: 'wifi',    label: '📶 WiFi' },
-    { id: 'history', label: '📈 History' },
+  
   ];
 
   return (
