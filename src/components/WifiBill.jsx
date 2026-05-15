@@ -46,13 +46,11 @@ const WifiBill = () => {
     if (people.length > 1) setPeople(prev => prev.filter(p => p.id !== id));
   };
 
-  // Equal split only
   const share = totalBill / people.length;
 
   return (
     <div className="bill-tab-section">
 
-      {/* Header */}
       <div className="bill-tab-header wifi-header">
         <span className="bill-tab-icon">📶</span>
         <div>
@@ -61,7 +59,6 @@ const WifiBill = () => {
         </div>
       </div>
 
-      {/* Plan Selector */}
       <div className="card" style={{ marginBottom: '1rem' }}>
         <label className="bill-label" style={{ marginBottom: '10px', display: 'block' }}>
           Select Internet Plan
@@ -82,7 +79,6 @@ const WifiBill = () => {
           ))}
         </div>
 
-        {/* Custom amount input */}
         {selectedPlan === 'Custom' && (
           <div style={{ marginTop: '1rem' }}>
             <label className="bill-label" style={{ marginBottom: '6px', display: 'block' }}>
@@ -106,7 +102,6 @@ const WifiBill = () => {
           </div>
         )}
 
-        {/* Total bill display */}
         <div style={{
           marginTop: '12px',
           padding: '10px 14px',
@@ -124,7 +119,6 @@ const WifiBill = () => {
         </div>
       </div>
 
-      {/* Split info */}
       <div className="bill-card" style={{ marginBottom: '1.5rem' }}>
         <label className="bill-label">Split Mode</label>
         <div style={{ marginTop: '8px' }}>
@@ -137,7 +131,6 @@ const WifiBill = () => {
 
       <div className="two-col-layout">
 
-        {/* Members */}
         <div>
           <div className="section-header">
             <h3 className="section-title">Members</h3>
@@ -187,10 +180,9 @@ const WifiBill = () => {
           </div>
         </div>
 
-        {/* Results */}
         <div>
           <h3 className="section-title">Each person pays</h3>
-          <div className="results-section" style={{ marginBottom: '1rem' }}>
+          <div className="results-section">
             <div className="results-list">
               {people.map((person, index) => {
                 const color = getPersonColor(index);
@@ -219,13 +211,6 @@ const WifiBill = () => {
                 );
               })}
             </div>
-          </div>
-
-          <div className="tips-card wifi-tips">
-            <div className="tips-title">📶 WiFi Tips</div>
-            <div className="tip-item">📺 Streaming HD video uses ~3GB/hour</div>
-            <div className="tip-item">🎮 Online gaming uses ~50MB/hour</div>
-            <div className="tip-item">💼 Video calls use ~1.5GB/hour</div>
           </div>
         </div>
 

@@ -161,7 +161,7 @@ const WaterBill = () => {
 
         <div>
           <h3 className="section-title">Each person pays</h3>
-          <div className="results-section" style={{ marginBottom: '1rem' }}>
+          <div className="results-section">
             <div className="results-list">
               {people.map((person, index) => {
                 const color = getPersonColor(index);
@@ -194,14 +194,6 @@ const WaterBill = () => {
                 );
               })}
             </div>
-          </div>
-
-          <div className="tips-card water-tips">
-            <div className="tips-title">💡 Water Saving Tips</div>
-            <div className="tip-item">🚿 Shorter showers save 50L per day</div>
-            <div className="tip-item">🪣 Fix leaks — 1 drip/sec wastes 30L/day</div>
-            <div className="tip-item">🌿 Water plants in morning to reduce evaporation</div>
-            <div className="tip-item">🧺 Run washing machine only when full</div>
           </div>
         </div>
 
